@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+.codex
+.vscode/
+*.log
+resultados*.txt
+output*.txt
+quick_check_wordlist.txt
+web_test_wordlist.txt
+sample_wordlist.txt
