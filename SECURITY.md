@@ -1,58 +1,58 @@
 # Security Policy
 
-## Visão geral
+## Overview
 
-Este projeto foi pensado para enumeração passiva e validação inicial de superfície web. Ele não foi desenhado para exploração ativa, brute force, fuzzing ou testes agressivos.
+This project was designed for passive enumeration and initial web surface validation. It was not built for active exploitation, brute force, fuzzing, or aggressive testing.
 
-O uso deve acontecer apenas em contextos autorizados, com finalidade legítima de defesa, pesquisa, auditoria interna ou avaliação previamente aprovada.
+It should only be used in authorized contexts, with legitimate goals such as defense, research, internal auditing, or previously approved assessment work.
 
-## Escopo de segurança
+## Security scope
 
-Este repositório trata principalmente de:
+This repository is mainly concerned with:
 
-- proteção de segredos locais
-- segurança do fluxo de consulta à API do VirusTotal
-- comportamento previsível nas checagens DNS e HTTP/HTTPS
-- redução de exposição acidental no uso e no versionamento
+- protection of local secrets
+- safe interaction with the VirusTotal API
+- predictable DNS and HTTP/HTTPS validation behavior
+- reduction of accidental exposure during usage and versioning
 
-## Segredos e credenciais
+## Secrets and credentials
 
-Para manter o projeto seguro:
+To keep this project safe:
 
-- nunca versione o arquivo `.env`
-- nunca publique sua `VT_API_KEY` em commits, prints, issues ou pull requests
-- use `.env.example` apenas como modelo
-- se houver qualquer suspeita de exposição, revogue a chave imediatamente e gere outra
+- never version the `.env` file
+- never publish your `VT_API_KEY` in commits, screenshots, issues, or pull requests
+- use `.env.example` only as a template
+- if there is any suspicion of exposure, revoke the key immediately and generate a new one
 
-## Uso responsável
+## Responsible use
 
-Ao utilizar esta ferramenta:
+When using this tool:
 
-- confirme que você tem autorização para analisar o domínio
-- respeite os limites da API do VirusTotal
-- evite divulgar listas de subdomínios ativos sem necessidade real
-- trate os resultados como apoio de triagem, não como verdade absoluta
+- confirm that you are authorized to analyze the target domain
+- respect the VirusTotal API limits
+- avoid disclosing active subdomain inventories without a real operational need
+- treat results as triage support, not as absolute truth
 
-## Relato de problemas de segurança
+## Reporting security issues
 
-Se você identificar uma falha neste projeto, prefira não abrir uma issue pública com detalhes sensíveis.
+If you identify a security issue in this project, avoid opening a public issue with sensitive details.
 
-O ideal é reportar de forma privada, incluindo:
+The preferred approach is a private report including:
 
-- descrição objetiva do problema
-- impacto potencial
-- passos mínimos para reprodução
-- sugestão de correção, se houver
+- a short description of the issue
+- the potential impact
+- minimal reproduction steps
+- a suggested fix, when possible
 
-## Diretrizes para manutenção
+## Maintenance guidelines
 
-Antes de publicar alterações:
+Before publishing changes:
 
-- revise o que entrou no commit
-- confirme que `.env` e arquivos locais não foram incluídos
-- evite colocar tokens em linha de comando, exemplos ou documentação
-- documente qualquer nova integração externa com clareza
+- review what is included in the commit
+- confirm that `.env` and local files were not added
+- avoid placing tokens in command lines, examples, or documentation
+- clearly document any new external integration
 
-## Observação final
+## Final note
 
-Ferramentas pequenas também merecem cuidado operacional. Em projetos desse tipo, segurança não está só no código, mas também no jeito como o repositório é mantido e como a ferramenta é usada.
+Even small tools deserve careful operational handling. In projects like this, security depends not only on the code, but also on how the repository is maintained and how the tool is used.

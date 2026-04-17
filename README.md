@@ -1,153 +1,153 @@
 # SubdomainEnum
 
 <p align="center">
-  Ferramenta enxuta para descoberta de subdomínios via VirusTotal, resolução DNS e validação web inicial.
+  A lightweight tool for subdomain discovery through VirusTotal, DNS resolution, and initial web validation.
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.10%2B-111111?style=flat-square&logo=python&logoColor=white&labelColor=000000" alt="Python 3.10+">
-  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square&logo=open-source-initiative&logoColor=white&labelColor=000000" alt="License MIT">
-  <img src="https://img.shields.io/badge/fonte-VirusTotal-111111?style=flat-square&logo=virustotal&logoColor=white&labelColor=000000" alt="Fonte VirusTotal">
-  <img src="https://img.shields.io/badge/foco-OSINT%20%7C%20Surface%20Web-111111?style=flat-square&logo=datadog&logoColor=white&labelColor=000000" alt="Foco OSINT e Surface Web">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square&logo=open-source-initiative&logoColor=white&labelColor=000000" alt="MIT License">
+  <img src="https://img.shields.io/badge/source-VirusTotal-111111?style=flat-square&logo=virustotal&logoColor=white&labelColor=000000" alt="VirusTotal Source">
+  <img src="https://img.shields.io/badge/focus-OSINT%20%7C%20Surface%20Web-111111?style=flat-square&logo=datadog&logoColor=white&labelColor=000000" alt="OSINT and Surface Web Focus">
 </p>
 
-## Sobre
+## About
 
-O `SubdomainEnum` foi feito para um fluxo simples e útil no dia a dia: consultar subdomínios conhecidos pelo VirusTotal, verificar quais resolvem via DNS e, se fizer sentido para a análise, validar quais realmente respondem em `HTTPS` ou `HTTP`.
+`SubdomainEnum` was built for a simple and practical workflow: query subdomains known by VirusTotal, check which ones resolve through DNS, and, when useful, validate which hosts actually respond over `HTTPS` or `HTTP`.
 
-Não é uma ferramenta de exploração, fuzzing ou brute force. A proposta aqui é apoiar triagem, OSINT e validação inicial de superfície externa de forma objetiva.
+This is not an exploitation, fuzzing, or brute-force tool. The goal is to support triage, OSINT workflows, and initial external surface validation in a direct and useful way.
 
-## O que a ferramenta faz
+## What it does
 
-- consulta subdomínios via API do VirusTotal
-- resolve os hostnames encontrados com concorrência
-- testa `HTTPS` por padrão
-- permite `HTTP` apenas quando você pedir isso explicitamente
-- salva resultados em arquivo quando necessário
-- lê a chave da API por variável de ambiente ou prompt seguro
+- queries subdomains through the VirusTotal API
+- resolves discovered hostnames concurrently
+- tests `HTTPS` by default
+- allows `HTTP` only when explicitly requested
+- saves results to a file when needed
+- reads the API key from an environment variable or secure prompt
 
-## Tecnologias
+## Technologies
 
 - Python 3
 - `dnspython`
 - VirusTotal API v3
-- `ThreadPoolExecutor` para concorrência
-- `urllib` e `ssl` da biblioteca padrão
+- `ThreadPoolExecutor` for concurrency
+- standard library `urllib` and `ssl`
 
-## Fluxo de uso
+## Workflow
 
 ```text
-VirusTotal -> DNS -> HTTPS/HTTP -> saída no terminal ou arquivo
+VirusTotal -> DNS -> HTTPS/HTTP -> terminal or file output
 ```
 
-## Instalação
+## Installation
 
-Clone o repositório e entre na pasta do projeto:
+Clone the repository and enter the project folder:
 
 ```bash
 git clone https://github.com/ftzk1ng/SubdomainEnum.git
 cd SubdomainEnum
 ```
 
-Crie um ambiente virtual:
+Create a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Instale a dependência necessária:
+Install the required dependency:
 
 ```bash
 python -m pip install dnspython
 ```
 
-## Configuração
+## Configuration
 
-A forma mais segura é definir a chave no ambiente:
+The safest way is to define the API key in your environment:
 
 ```bash
-export VT_API_KEY="sua_chave_aqui"
+export VT_API_KEY="your_key_here"
 ```
 
-Se preferir usar arquivo local, copie o modelo:
+If you prefer a local file, copy the template:
 
 ```bash
 cp .env.example .env
 ```
 
-Depois edite o `.env` local com sua chave. Esse arquivo não deve ser versionado.
+Then edit `.env` locally with your key. That file should never be versioned.
 
-## Uso rápido
+## Quick usage
 
-Consulta básica:
+Basic query:
 
 ```bash
 python3 subenum.py google.com
 ```
 
-Consulta com validação web:
+Query with web validation:
 
 ```bash
 python3 subenum.py google.com --insecure
 ```
 
-Consulta menor para teste:
+Smaller test run:
 
 ```bash
 python3 subenum.py google.com --virustotal-max-results 20
 ```
 
-Salvar a saída em arquivo:
+Save output to a file:
 
 ```bash
-python3 subenum.py google.com -o resultados.txt
+python3 subenum.py google.com -o results.txt
 ```
 
-Testar apenas HTTP:
+Use HTTP only:
 
 ```bash
 python3 subenum.py google.com --http-only
 ```
 
-Permitir fallback de HTTPS para HTTP:
+Allow fallback from HTTPS to HTTP:
 
 ```bash
 python3 subenum.py google.com --allow-http-fallback
 ```
 
-## Principais opções
+## Main options
 
-- `--virustotal-max-results`: define o limite de subdomínios consultados
-- `--check-web`: mantém a checagem web ativa
-- `--no-check-web`: pula a etapa HTTP/HTTPS
-- `--web-timeout`: ajusta o tempo limite da validação web
-- `--http-only`: usa apenas HTTP
-- `--allow-http-fallback`: tenta HTTP após falha em HTTPS
-- `--insecure`: desativa validação TLS para testes controlados
-- `-o` ou `--output`: salva a saída em arquivo
+- `--virustotal-max-results`: defines the maximum number of queried subdomains
+- `--check-web`: keeps web validation enabled
+- `--no-check-web`: skips the HTTP/HTTPS validation step
+- `--web-timeout`: adjusts the web validation timeout
+- `--http-only`: uses HTTP only
+- `--allow-http-fallback`: tries HTTP after HTTPS fails
+- `--insecure`: disables TLS validation for controlled testing
+- `-o` or `--output`: saves output to a file
 
-Para ver todas as opções:
+To view all options:
 
 ```bash
 python3 subenum.py --help
 ```
 
-## Exemplo de saída
+## Example output
 
 ```text
-[*] O VirusTotal retornou 20 subdominio(s).
-[+] Encontrados 16 subdominio(s) ativo(s):
- - ead.exemplo.com -> 203.0.113.10
- - app.exemplo.com -> 203.0.113.11
-[*] Foram testados 20 candidato(s).
-[*] Falharam ou ficaram inativos: 4
-[+] Hosts acessiveis via web: 8
- - ead.exemplo.com -> https://ead.exemplo.com (status: 200)
- - app.exemplo.com -> https://app.exemplo.com (status: 403)
+[*] VirusTotal returned 20 subdomain(s).
+[+] Found 16 active subdomain(s):
+ - ead.example.com -> 203.0.113.10
+ - app.example.com -> 203.0.113.11
+[*] Tested 20 candidate(s).
+[*] Failed or inactive: 4
+[+] Web-accessible hosts: 8
+ - ead.example.com -> https://ead.example.com (status: 200)
+ - app.example.com -> https://app.example.com (status: 403)
 ```
 
-## Estrutura do repositório
+## Repository structure
 
 ```text
 .
@@ -159,25 +159,25 @@ python3 subenum.py --help
 └── LICENSE
 ```
 
-## Boas práticas
+## Good practices
 
-- use a ferramenta apenas em contextos autorizados
-- trate `403` e `404` como sinais de serviço exposto, não como ausência de host
-- não publique inventários sensíveis de terceiros
-- revogue imediatamente qualquer chave exposta por engano
-- use `--insecure` apenas quando souber exatamente por que está fazendo isso
+- use the tool only in authorized contexts
+- treat `403` and `404` as signs of an exposed web service, not as host absence
+- avoid publishing sensitive third-party inventories
+- revoke any exposed key immediately
+- use `--insecure` only when you clearly understand why
 
-## Limitações
+## Limitations
 
-- a qualidade dos resultados depende da visibilidade que o VirusTotal tem do domínio
-- nem todo host resolvido representa um ativo relevante ou atual
-- a checagem web valida presença de serviço, não o comportamento funcional da aplicação
-- ambientes com certificados quebrados podem exigir ajustes na validação TLS
+- result quality depends on what VirusTotal knows about the target domain
+- not every resolved host represents a relevant or current asset
+- the web check confirms service presence, not application behavior
+- environments with broken certificates may require TLS validation adjustments
 
-## Segurança
+## Security
 
-As orientações de uso responsável, tratamento de segredos e relato de problemas estão em [SECURITY.md](./SECURITY.md).
+Guidance on responsible use, secret handling, and reporting security issues is available in [SECURITY.md](./SECURITY.md).
 
-## Licença
+## License
 
-Este projeto está licenciado sob a [MIT License](./LICENSE).
+This project is licensed under the [MIT License](./LICENSE).
