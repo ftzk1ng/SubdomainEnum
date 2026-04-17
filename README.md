@@ -147,11 +147,27 @@ python3 subenum.py --help
  - app.example.com -> https://app.example.com (status: 403)
 ```
 
+## Claude Code skill
+
+This repository includes a [SKILL.md](./SKILL.md) file that can be used as a skill with [Claude Code](https://claude.com/claude-code).
+
+Once the project is open in Claude Code, the `/sub` command is available. It loads the full analysis context — CLI options, output interpretation, common workflows, and responsible use guidelines — so you can get straight to analysis without any manual setup.
+
+```text
+/sub
+```
+
+The skill file can also be attached directly as project instructions in claude.ai for use outside the CLI.
+
 ## Repository structure
 
 ```text
 .
 ├── subenum.py
+├── SKILL.md
+├── .claude/
+│   └── commands/
+│       └── sub.md
 ├── .env.example
 ├── .gitignore
 ├── README.md
