@@ -1,46 +1,58 @@
-# Política de Segurança
+# Security Policy
 
-## Escopo
+## Visão geral
 
-Este projeto foi criado para apoiar enumeração passiva e validação inicial de superfície web a partir de dados do VirusTotal. Ele não foi pensado para exploração, fuzzing, brute force ou qualquer forma de teste agressivo.
+Este projeto foi pensado para enumeração passiva e validação inicial de superfície web. Ele não foi desenhado para exploração ativa, brute force, fuzzing ou testes agressivos.
 
-O uso deve ocorrer apenas em ambientes autorizados, dentro de contexto legítimo de pesquisa, defesa, auditoria interna ou avaliação previamente aprovada.
+O uso deve acontecer apenas em contextos autorizados, com finalidade legítima de defesa, pesquisa, auditoria interna ou avaliação previamente aprovada.
 
-## Tratamento de segredos
+## Escopo de segurança
+
+Este repositório trata principalmente de:
+
+- proteção de segredos locais
+- segurança do fluxo de consulta à API do VirusTotal
+- comportamento previsível nas checagens DNS e HTTP/HTTPS
+- redução de exposição acidental no uso e no versionamento
+
+## Segredos e credenciais
+
+Para manter o projeto seguro:
 
 - nunca versione o arquivo `.env`
 - nunca publique sua `VT_API_KEY` em commits, prints, issues ou pull requests
-- prefira revogar e gerar uma nova chave caso exista qualquer suspeita de exposição
-- use `.env.example` apenas como modelo, sem valores reais
+- use `.env.example` apenas como modelo
+- se houver qualquer suspeita de exposição, revogue a chave imediatamente e gere outra
 
 ## Uso responsável
 
 Ao utilizar esta ferramenta:
 
-- confirme que você tem autorização para analisar o domínio em questão
-- respeite limites de uso da API do VirusTotal
-- evite divulgar listas de subdomínios ativos sem necessidade operacional
-- interprete os resultados com cautela, especialmente em ambientes de terceiros
+- confirme que você tem autorização para analisar o domínio
+- respeite os limites da API do VirusTotal
+- evite divulgar listas de subdomínios ativos sem necessidade real
+- trate os resultados como apoio de triagem, não como verdade absoluta
 
-## Relato de vulnerabilidades
+## Relato de problemas de segurança
 
-Se você identificar um problema de segurança neste projeto, o ideal é não abrir uma issue pública com detalhes sensíveis.
+Se você identificar uma falha neste projeto, prefira não abrir uma issue pública com detalhes sensíveis.
 
-Prefira um contato privado com um resumo objetivo do problema, incluindo:
+O ideal é reportar de forma privada, incluindo:
 
-- descrição do comportamento observado
+- descrição objetiva do problema
 - impacto potencial
-- passos mínimos para reproduzir
+- passos mínimos para reprodução
 - sugestão de correção, se houver
 
-## Boas práticas para quem for manter o projeto
+## Diretrizes para manutenção
 
-- revise dependências antes de atualizar o ambiente
-- mantenha segredos fora do código-fonte
-- valide o `.gitignore` antes de publicar o repositório
-- teste o fluxo com uma chave própria e revogável
-- documente claramente qualquer nova integração externa
+Antes de publicar alterações:
 
-## Aviso final
+- revise o que entrou no commit
+- confirme que `.env` e arquivos locais não foram incluídos
+- evite colocar tokens em linha de comando, exemplos ou documentação
+- documente qualquer nova integração externa com clareza
 
-Ferramentas de enumeração podem parecer simples, mas ainda assim lidam com ativos sensíveis. A utilidade do projeto depende tanto do código quanto da forma como ele é operado.
+## Observação final
+
+Ferramentas pequenas também merecem cuidado operacional. Em projetos desse tipo, segurança não está só no código, mas também no jeito como o repositório é mantido e como a ferramenta é usada.

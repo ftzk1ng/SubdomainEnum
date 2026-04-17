@@ -1,42 +1,52 @@
-# Subdomain Enumerator
+# SubdomainEnum
 
-Ferramenta simples em Python para apoiar triagem de subdomínios a partir do VirusTotal.
+<p align="center">
+  Ferramenta enxuta para descoberta de subdomínios via VirusTotal, resolução DNS e validação web inicial.
+</p>
 
-O fluxo é direto:
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.10%2B-111111?style=flat-square&logo=python&logoColor=white&labelColor=000000" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square&logo=open-source-initiative&logoColor=white&labelColor=000000" alt="License MIT">
+  <img src="https://img.shields.io/badge/fonte-VirusTotal-111111?style=flat-square&logo=virustotal&logoColor=white&labelColor=000000" alt="Fonte VirusTotal">
+  <img src="https://img.shields.io/badge/foco-OSINT%20%7C%20Surface%20Web-111111?style=flat-square&logo=datadog&logoColor=white&labelColor=000000" alt="Foco OSINT e Surface Web">
+</p>
 
-1. consulta subdomínios de um domínio na API do VirusTotal
-2. tenta resolver cada hostname via DNS
-3. opcionalmente testa se o host responde em `HTTPS` e `HTTP`
+## Sobre
 
-O foco do projeto é ser útil em rotina de OSINT, validação de superfície web e revisão inicial de exposição externa, sem inventário invasivo nem exploração ativa.
+O `SubdomainEnum` foi feito para um fluxo simples e útil no dia a dia: consultar subdomínios conhecidos pelo VirusTotal, verificar quais resolvem via DNS e, se fizer sentido para a análise, validar quais realmente respondem em `HTTPS` ou `HTTP`.
 
-## Visão geral
+Não é uma ferramenta de exploração, fuzzing ou brute force. A proposta aqui é apoiar triagem, OSINT e validação inicial de superfície externa de forma objetiva.
 
-O script foi pensado para um uso prático e rápido no terminal. Em vez de depender de wordlists, ele trabalha com uma fonte externa de inteligência já consolidada e depois faz a validação local dos resultados.
+## O que a ferramenta faz
 
-Hoje o projeto cobre:
+- consulta subdomínios via API do VirusTotal
+- resolve os hostnames encontrados com concorrência
+- testa `HTTPS` por padrão
+- permite `HTTP` apenas quando você pedir isso explicitamente
+- salva resultados em arquivo quando necessário
+- lê a chave da API por variável de ambiente ou prompt seguro
 
-- coleta de subdomínios via VirusTotal
-- resolução DNS concorrente
-- checagem web leve com `HTTPS` por padrão
-- fallback opcional para `HTTP` apenas quando solicitado
-- saída no terminal
-- exportação opcional para arquivo texto
-- leitura da chave da API via variável de ambiente ou prompt seguro
+## Tecnologias
 
-## Requisitos
+- Python 3
+- `dnspython`
+- VirusTotal API v3
+- `ThreadPoolExecutor` para concorrência
+- `urllib` e `ssl` da biblioteca padrão
 
-- Python 3.10 ou superior
-- `dnspython` para resolução DNS mais confiável
-- chave válida da API do VirusTotal
+## Fluxo de uso
+
+```text
+VirusTotal -> DNS -> HTTPS/HTTP -> saída no terminal ou arquivo
+```
 
 ## Instalação
 
 Clone o repositório e entre na pasta do projeto:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd "Subdomain Enumerator"
+git clone https://github.com/ftzk1ng/SubdomainEnum.git
+cd SubdomainEnum
 ```
 
 Crie um ambiente virtual:
@@ -46,7 +56,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Instale a dependência:
+Instale a dependência necessária:
 
 ```bash
 python -m pip install dnspython
@@ -54,61 +64,68 @@ python -m pip install dnspython
 
 ## Configuração
 
-Você pode definir a chave da API no ambiente:
+A forma mais segura é definir a chave no ambiente:
 
 ```bash
 export VT_API_KEY="sua_chave_aqui"
 ```
 
-Se preferir manter uma configuração local fora do versionamento, crie um arquivo `.env`:
-
-```env
-VT_API_KEY=sua_chave_aqui
-```
-
-Se preferir, use o modelo já incluído:
+Se preferir usar arquivo local, copie o modelo:
 
 ```bash
 cp .env.example .env
 ```
 
-O `.env` está no `.gitignore` e não deve ser versionado.
+Depois edite o `.env` local com sua chave. Esse arquivo não deve ser versionado.
 
-## Como usar
+## Uso rápido
 
-Exemplo básico:
+Consulta básica:
 
 ```bash
 python3 subenum.py google.com
 ```
 
-Buscar subdomínios e testar acesso web:
+Consulta com validação web:
 
 ```bash
 python3 subenum.py google.com --insecure
 ```
 
-Limitar o volume de resultados:
+Consulta menor para teste:
 
 ```bash
-python3 subenum.py google.com --virustotal-max-results 20 --insecure
+python3 subenum.py google.com --virustotal-max-results 20
 ```
 
 Salvar a saída em arquivo:
 
 ```bash
-python3 subenum.py google.com --virustotal-max-results 20 --insecure -o resultados.txt
+python3 subenum.py google.com -o resultados.txt
+```
+
+Testar apenas HTTP:
+
+```bash
+python3 subenum.py google.com --http-only
+```
+
+Permitir fallback de HTTPS para HTTP:
+
+```bash
+python3 subenum.py google.com --allow-http-fallback
 ```
 
 ## Principais opções
 
-- `--virustotal-max-results`: limita a quantidade de subdomínios retornados pela API
+- `--virustotal-max-results`: define o limite de subdomínios consultados
 - `--check-web`: mantém a checagem web ativa
-- `--web-timeout`: define o tempo limite da checagem web
-- `--http-only`: testa apenas `HTTP`
-- `--allow-http-fallback`: tenta `HTTP` só depois de falha em `HTTPS`
-- `--insecure`: ignora validação de certificado TLS durante a checagem HTTPS
-- `-o` ou `--output`: salva o resultado em arquivo
+- `--no-check-web`: pula a etapa HTTP/HTTPS
+- `--web-timeout`: ajusta o tempo limite da validação web
+- `--http-only`: usa apenas HTTP
+- `--allow-http-fallback`: tenta HTTP após falha em HTTPS
+- `--insecure`: desativa validação TLS para testes controlados
+- `-o` ou `--output`: salva a saída em arquivo
 
 Para ver todas as opções:
 
@@ -130,7 +147,7 @@ python3 subenum.py --help
  - app.exemplo.com -> https://app.exemplo.com (status: 403)
 ```
 
-## Estrutura do projeto
+## Estrutura do repositório
 
 ```text
 .
@@ -138,23 +155,29 @@ python3 subenum.py --help
 ├── .env.example
 ├── .gitignore
 ├── README.md
-└── SECURITY.md
+├── SECURITY.md
+└── LICENSE
 ```
 
-## Boas práticas de uso
+## Boas práticas
 
 - use a ferramenta apenas em contextos autorizados
-- trate respostas `403` e `404` como indício de serviço web exposto, não como ausência de host
-- evite publicar arquivos de saída que contenham inventário sensível de terceiros
-- considere os limites de uso da API do VirusTotal antes de aumentar o volume das consultas
+- trate `403` e `404` como sinais de serviço exposto, não como ausência de host
+- não publique inventários sensíveis de terceiros
+- revogue imediatamente qualquer chave exposta por engano
+- use `--insecure` apenas quando souber exatamente por que está fazendo isso
 
-## Limitações conhecidas
+## Limitações
 
-- a qualidade dos resultados depende do que o VirusTotal conhece sobre o domínio
-- nem todo subdomínio resolvido necessariamente representa um ativo útil ou atual
-- a checagem web testa apenas a resposta básica da aplicação, não o comportamento funcional da página
-- alguns ambientes podem exigir `--insecure` por conta de certificados desalinhados ou expirados
+- a qualidade dos resultados depende da visibilidade que o VirusTotal tem do domínio
+- nem todo host resolvido representa um ativo relevante ou atual
+- a checagem web valida presença de serviço, não o comportamento funcional da aplicação
+- ambientes com certificados quebrados podem exigir ajustes na validação TLS
+
+## Segurança
+
+As orientações de uso responsável, tratamento de segredos e relato de problemas estão em [SECURITY.md](./SECURITY.md).
 
 ## Licença
 
-Se este projeto for publicado, vale incluir uma licença compatível com o uso pretendido.
+Este projeto está licenciado sob a [MIT License](./LICENSE).
